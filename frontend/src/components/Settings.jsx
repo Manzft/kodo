@@ -37,6 +37,7 @@ function applyTheme(theme) {
   for (const [key, val] of Object.entries(LIGHT_VARS)) {
     root.style.setProperty(key, theme === 'light' ? val : '')
   }
+  root.setAttribute('data-theme', theme)
   localStorage.setItem('kodo-theme', theme)
 }
 

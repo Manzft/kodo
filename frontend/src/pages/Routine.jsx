@@ -122,7 +122,9 @@ export default function Routine() {
     <>
       <div className="page-header">
         <h2 className="page-title">{t('routine.title')}</h2>
-        <button className="btn btn-primary" onClick={openRoutineCreate}>{t('routine.newRoutine')}</button>
+        <div className="page-header-actions">
+          <button className="btn btn-primary" onClick={openRoutineCreate}>{t('routine.newRoutine')}</button>
+        </div>
       </div>
 
       <div className="page">
@@ -141,7 +143,7 @@ export default function Routine() {
                   <div className="routine-header">
                     <h3 className="routine-name">{r.name}</h3>
                     <div className="routine-actions">
-                      <button className="btn btn-primary btn-sm" onClick={() => openSession(r)}>+ {t('routine.newSession')}</button>
+                      <button className="btn btn-primary btn-sm" onClick={() => openSession(r)}>{t('routine.newSession')}</button>
                       <button className="btn btn-icon" onClick={() => openRoutineEdit(r)} title={t('common.edit')}>
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M10 1l3 3-8 8H2v-3z"/></svg>
                       </button>

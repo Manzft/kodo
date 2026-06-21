@@ -124,3 +124,17 @@ export const toggleTrackerEntry = (id, date) =>
 
 export const getTrackerStats = (id) =>
   request(`/trackers/${id}/stats`)
+
+// -- Chat --
+
+export const chatListModels = (apiKey, baseUrl) =>
+  request('/chat/models', {
+    method: 'POST',
+    body: JSON.stringify({ api_key: apiKey, base_url: baseUrl }),
+  })
+
+export const chatSend = (apiKey, baseUrl, model, messages) =>
+  request('/chat/send', {
+    method: 'POST',
+    body: JSON.stringify({ api_key: apiKey, base_url: baseUrl, model, messages }),
+  })

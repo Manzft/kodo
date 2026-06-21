@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Dashboard, Notes, Reminders, Calendar, Routine, Todo, Tracking, Settings as SettingsIcon } from './Icons'
+import { Dashboard, Notes, Reminders, Calendar, Routine, Todo, Tracking, Chat, Settings as SettingsIcon } from './Icons'
 import { useLang } from '../i18n'
 import Settings from './Settings'
 
@@ -11,14 +11,20 @@ const items = [
   { id: 'routine', icon: Routine, key: 'routine' },
   { id: 'todo', icon: Todo, key: 'todo' },
   { id: 'tracking', icon: Tracking, key: 'tracking' },
+  { id: 'chatbot', icon: Chat, key: 'chatbot' },
 ]
 
-export default function Sidebar({ current, onNavigate }) {
+export default function Sidebar({ current, onNavigate, mobileOpen, onClose }) {
   const { t } = useLang()
   const [showSettings, setShowSettings] = useState(false)
 
+  const handleNav = (id) => {
+    onNavigate(id)
+    if (onClose) onClose()
+  }
+
   return (
-    <nav className="sidebar">
+    <nav className={`sidebar${mobileOpen ? ' sidebar-mobile' : ''}`}>
       <div className="sidebar-logo">
         <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
           <rect width="36" height="36" rx="10" fill="var(--accent)"/>
@@ -36,7 +42,7 @@ export default function Sidebar({ current, onNavigate }) {
           <button
             key={item.id}
             className={`sidebar-btn${current === item.id ? ' active' : ''}`}
-            onClick={() => onNavigate(item.id)}
+            onClick={() => handleNav(item.id)}
           >
             <item.icon />
             <span>{t(`nav.${item.key}`)}</span>
