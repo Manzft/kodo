@@ -27,8 +27,8 @@ kodo/
 │   ├── routes/            # Blueprints: notes, reminders, calendar, todos, routines, trackers, chat
 │   ├── server.py          # Entry point Flask
 │   └── storage.py         # Lectura/escritura JSON en ~/.local/share/kodo/
-├── install.sh / install.ps1
-├── start.sh / start.ps1
+├── install.sh
+├── start.sh
 ├── README.md              # Bilingüe (ES/EN)
 └── LICENSE                # MIT
 ```
