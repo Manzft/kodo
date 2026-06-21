@@ -38,13 +38,19 @@ function startFlask() {
       ...process.env,
       KODO_STATIC_DIR: DIST,
       KODO_DATA_DIR: path.join(app.getPath('userData'), 'data'),
+      FLASK_DEBUG: DEV ? '1' : '0',
     }
-    const python = process.platform === 'win32' ? 'python' : 'python3'
-    flask = spawn(python, [path.resolve(BACKEND, 'server.py')], {
-      cwd: BACKEND,
-      env,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    })
+    if (DEV) {
+      const python = process.platform === 'win32' ? 'python' : 'python3'
+      flask = spawn(python, [path.resolve(BACKEND, 'server.py')], {
+        cwd: BACKEND, env, stdio: ['ignore', 'pipe', 'pipe'],
+      })
+    } else {
+      const ext = process.platform === 'win32' ? '.exe' : ''
+      flask = spawn(path.resolve(BACKEND, 'kodo-backend', `kodo-backend${ext}`), [], {
+        env, stdio: ['ignore', 'pipe', 'pipe'],
+      })
+    }
     flask.stdout.on('data', (d) => process.stdout.write(`[flask] ${d}`))
     flask.stderr.on('data', (d) => process.stderr.write(`[flask] ${d}`))
     flask.on('error', reject)

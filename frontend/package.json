@@ -41,10 +41,12 @@
     ],
     "extraResources": [
       {
-        "from": "../backend",
-        "to": "backend",
-        "filter": ["**/*", "!venv/**", "!__pycache__/**"]
+        "from": "../backend/dist/kodo-backend",
+        "to": "backend/kodo-backend"
       }
+    ],
+    "asarUnpack": [
+      "**/*.node"
     ],
     "linux": {
       "target": ["AppImage"],
