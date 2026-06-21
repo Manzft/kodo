@@ -8,7 +8,9 @@ const DEV = !app.isPackaged
 const PORT = 5000
 
 const ROOT = path.resolve(__dirname, '..')
-const DIST = path.resolve(ROOT, 'dist')
+const DIST = DEV
+  ? path.resolve(ROOT, 'dist')
+  : path.resolve(process.resourcesPath, 'frontend')
 const BACKEND = DEV
   ? path.resolve(ROOT, '..', 'backend')
   : path.resolve(process.resourcesPath, 'backend')

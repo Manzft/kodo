@@ -35,18 +35,18 @@
       "output": "dist-electron"
     },
     "files": [
-      "dist/**/*",
       "electron/**/*",
       "!node_modules/**/*"
     ],
     "extraResources": [
       {
+        "from": "dist",
+        "to": "frontend"
+      },
+      {
         "from": "../backend/dist/kodo-backend",
         "to": "backend/kodo-backend"
       }
-    ],
-    "asarUnpack": [
-      "**/*.node"
     ],
     "linux": {
       "target": ["AppImage"],
