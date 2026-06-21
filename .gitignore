@@ -8,4 +8,5 @@ __pycache__/
 .opencode/
 frontend/android/app/src/main/python/static/
 frontend/android/app/src/main/python/backend/
+frontend/dist-electron/
 

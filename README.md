@@ -39,7 +39,14 @@ cd kodo
 
 Inicia el servidor Flask (`localhost:5000`) y el frontend Vite (`localhost:5173`), y abre el navegador.
 
-> **Windows**: próximamente se podrá generar un `.exe` autónomo sin dependencias.
+### Escritorio (Windows / Linux)
+
+```bash
+./build-desktop.sh
+```
+
+Genera un ejecutable autónomo (`.exe` en Windows, `.AppImage` en Linux) con la app
+en su propia ventana, sin necesidad de navegador.
 
 ### Módulos
 
@@ -94,7 +101,14 @@ cd kodo
 
 Starts the Flask server (`localhost:5000`) and Vite frontend (`localhost:5173`), then opens the browser.
 
-> **Windows**: a standalone `.exe` will be available soon.
+### Desktop (Windows / Linux)
+
+```bash
+./build-desktop.sh
+```
+
+Generates a standalone executable (`.exe` on Windows, `.AppImage` on Linux)
+with the app in its own window, no browser needed.
 
 ### Modules
 

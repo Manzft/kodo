@@ -29,6 +29,8 @@ kodo/
 │   └── storage.py         # Lectura/escritura JSON en ~/.local/share/kodo/
 ├── install.sh
 ├── start.sh
+├── build-apk.sh
+├── build-desktop.sh
 ├── README.md              # Bilingüe (ES/EN)
 └── LICENSE                # MIT
 ```
@@ -77,7 +79,8 @@ frontend/android/
 ```bash
 ./install.sh      # Instala dependencias (una vez)
 ./start.sh        # Inicia backend + frontend + abre navegador
-./build-apk.sh    # Build frontend + embebe en Android + genera APK
+./build-apk.sh      # Build frontend + embebe en Android + genera APK
+./build-desktop.sh  # Build frontend + Electron AppImage/.exe
 ```
 
 ### APK generado
