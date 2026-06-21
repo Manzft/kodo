@@ -1,18 +1,20 @@
 import { useState } from 'react'
 import { Dashboard, Notes, Reminders, Calendar, Routine, Todo, Tracking, Settings as SettingsIcon } from './Icons'
+import { useLang } from '../i18n'
 import Settings from './Settings'
 
 const items = [
-  { id: 'dashboard', label: 'Dashboard', icon: Dashboard },
-  { id: 'notes', label: 'Notas', icon: Notes },
-  { id: 'reminders', label: 'Recordatorios', icon: Reminders },
-  { id: 'calendar', label: 'Calendario', icon: Calendar },
-  { id: 'routine', label: 'Rutina', icon: Routine },
-  { id: 'todo', label: 'To-Do', icon: Todo },
-  { id: 'tracking', label: 'Tracking', icon: Tracking },
+  { id: 'dashboard', icon: Dashboard, key: 'dashboard' },
+  { id: 'notes', icon: Notes, key: 'notes' },
+  { id: 'reminders', icon: Reminders, key: 'reminders' },
+  { id: 'calendar', icon: Calendar, key: 'calendar' },
+  { id: 'routine', icon: Routine, key: 'routine' },
+  { id: 'todo', icon: Todo, key: 'todo' },
+  { id: 'tracking', icon: Tracking, key: 'tracking' },
 ]
 
 export default function Sidebar({ current, onNavigate }) {
+  const { t } = useLang()
   const [showSettings, setShowSettings] = useState(false)
 
   return (
@@ -37,7 +39,7 @@ export default function Sidebar({ current, onNavigate }) {
             onClick={() => onNavigate(item.id)}
           >
             <item.icon />
-            <span>{item.label}</span>
+            <span>{t(`nav.${item.key}`)}</span>
           </button>
         ))}
       </div>
@@ -47,7 +49,7 @@ export default function Sidebar({ current, onNavigate }) {
           onClick={() => setShowSettings(true)}
         >
           <SettingsIcon />
-          <span>Ajustes</span>
+          <span>{t('nav.settings')}</span>
         </button>
       </div>
       <Settings open={showSettings} onClose={() => setShowSettings(false)} />

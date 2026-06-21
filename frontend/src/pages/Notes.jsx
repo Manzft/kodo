@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react'
 import { getNotes, createNote, updateNote, deleteNote } from '../api'
 import Modal from '../components/Modal'
+import { useLang } from '../i18n'
 
 const EMPTY_FORM = { title: '', content: '' }
 
 export default function Notes() {
+  const { t } = useLang()
   const [notes, setNotes] = useState([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
 
-  useEffect(() => {
-    loadNotes()
-  }, [])
+  useEffect(() => { loadNotes() }, [])
 
   async function loadNotes() {
     try {
@@ -63,20 +63,20 @@ export default function Notes() {
     }
   }
 
-  if (loading) return <div className="page"><p className="muted">Cargando...</p></div>
+  if (loading) return <div className="page"><p className="muted">{t('common.loading')}</p></div>
 
   return (
     <>
       <div className="page-header">
-        <h2 className="page-title">Notas</h2>
+        <h2 className="page-title">{t('notes.title')}</h2>
         <button className="btn btn-primary" onClick={openCreate}>
-          + Nueva nota
+          {t('notes.new')}
         </button>
       </div>
 
       <div className="page">
         {notes.length === 0 ? (
-          <p className="muted">No hay notas aún. Crea tu primera nota.</p>
+          <p className="muted">{t('notes.empty')}</p>
         ) : (
           <div className="notes-grid">
             {notes.map((note) => (
@@ -84,7 +84,7 @@ export default function Notes() {
                 <div className="note-card-body" onClick={() => openEdit(note)}>
                   <h3 className="note-title">{note.title}</h3>
                   <p className="note-preview">
-                    {note.content ? note.content.substring(0, 120) : 'Sin contenido'}
+                    {note.content ? note.content.substring(0, 120) : t('common.noContent')}
                   </p>
                   <span className="note-date">
                     {new Date(note.updated_at).toLocaleDateString('es-ES', {
@@ -93,12 +93,12 @@ export default function Notes() {
                   </span>
                 </div>
                 <div className="note-card-actions">
-                  <button className="btn btn-icon" onClick={() => openEdit(note)} title="Editar">
+                  <button className="btn btn-icon" onClick={() => openEdit(note)} title={t('common.edit')}>
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                       <path d="M10 1l3 3-8 8H2v-3z"/>
                     </svg>
                   </button>
-                  <button className="btn btn-icon" onClick={(e) => handleDelete(note.id, e)} title="Eliminar">
+                  <button className="btn btn-icon" onClick={(e) => handleDelete(note.id, e)} title={t('common.delete')}>
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                       <polyline points="1 3 13 3 12 13 2 13 1 3"/>
                       <line x1="5" y1="1" x2="9" y2="1"/>
@@ -114,35 +114,35 @@ export default function Notes() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editingId ? 'Editar nota' : 'Nueva nota'}
+        title={editingId ? t('notes.edit') : t('notes.create')}
       >
         <div className="modal-form">
           <label className="field">
-            <span>Título</span>
+            <span>{t('common.title')}</span>
             <input
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="Título de la nota"
+              placeholder={t('notes.titlePlaceholder')}
               autoFocus
             />
           </label>
 
           <label className="field">
-            <span>Contenido</span>
+            <span>{t('common.content')}</span>
             <textarea
               className="modal-textarea"
               value={form.content}
               onChange={(e) => setForm({ ...form, content: e.target.value })}
-              placeholder="Escribe tu nota..."
+              placeholder={t('notes.contentPlaceholder')}
               rows={8}
             />
           </label>
 
           <div className="modal-actions">
             <button className="btn btn-primary" onClick={handleSave}>
-              {editingId ? 'Guardar' : 'Crear'}
+              {editingId ? t('common.save') : t('common.create')}
             </button>
-            <button className="btn" onClick={() => setModalOpen(false)}>Cancelar</button>
+            <button className="btn" onClick={() => setModalOpen(false)}>{t('common.cancel')}</button>
           </div>
         </div>
       </Modal>

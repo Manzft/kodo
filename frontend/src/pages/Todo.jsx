@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { getTopics, createTopic, updateTopic, deleteTopic, getTodos, createTodo, updateTodo, deleteTodo } from '../api'
 import Modal from '../components/Modal'
+import { useLang } from '../i18n'
 
 const TOPIC_COLORS = ['#f26c8f', '#f9a825', '#66bb6a', '#42a5f5', '#ab47bc', '#26c6da', '#ef5350', '#8d6e63']
-const PRIORITY_LABELS = { low: 'Baja', medium: 'Media', high: 'Alta' }
-
 const EMPTY_TOPIC = { name: '', color: TOPIC_COLORS[0] }
 const EMPTY_TODO = { topic_id: null, title: '', description: '', due_date: '', priority: 'medium' }
 
 export default function Todo() {
+  const { t } = useLang()
   const [topics, setTopics] = useState([])
   const [items, setItems] = useState([])
   const [activeTopic, setActiveTopic] = useState(null)
@@ -26,10 +26,10 @@ export default function Todo() {
 
   async function load() {
     try {
-      const [t, i] = await Promise.all([getTopics(), getTodos()])
-      setTopics(t)
-      setItems(i)
-      if (t.length > 0 && !activeTopic) setActiveTopic(t[0].id)
+      const [tpc, it] = await Promise.all([getTopics(), getTodos()])
+      setTopics(tpc)
+      setItems(it)
+      if (tpc.length > 0 && !activeTopic) setActiveTopic(tpc[0].id)
     } catch (e) {
       console.error(e)
     } finally {
@@ -39,8 +39,7 @@ export default function Todo() {
 
   const filteredItems = activeTopic ? items.filter(i => i.topic_id === activeTopic) : items
   const currentTopic = topics.find(t => t.id === activeTopic)
-
-  // -- Topic CRUD --
+  const priorityLabels = t('todo.priorities')
 
   function openTopicCreate() {
     setEditingTopic(null)
@@ -57,16 +56,11 @@ export default function Todo() {
   async function saveTopic() {
     if (!topicForm.name.trim()) return
     try {
-      if (editingTopic) {
-        await updateTopic(editingTopic, topicForm)
-      } else {
-        await createTopic(topicForm)
-      }
+      if (editingTopic) { await updateTopic(editingTopic, topicForm) }
+      else { await createTopic(topicForm) }
       setTopicModal(false)
       await load()
-    } catch (e) {
-      console.error(e)
-    }
+    } catch (e) { console.error(e) }
   }
 
   async function removeTopic(id, e) {
@@ -75,12 +69,8 @@ export default function Todo() {
       await deleteTopic(id)
       if (activeTopic === id) setActiveTopic(topics.length > 1 ? topics.find(t => t.id !== id)?.id : null)
       await load()
-    } catch (e) {
-      console.error(e)
-    }
+    } catch (e) { console.error(e) }
   }
-
-  // -- Todo CRUD --
 
   function openTodoCreate() {
     setEditingTodo(null)
@@ -91,10 +81,8 @@ export default function Todo() {
   function openTodoEdit(item) {
     setEditingTodo(item.id)
     setTodoForm({
-      topic_id: item.topic_id,
-      title: item.title,
-      description: item.description || '',
-      due_date: item.due_date || '',
+      topic_id: item.topic_id, title: item.title,
+      description: item.description || '', due_date: item.due_date || '',
       priority: item.priority || 'medium',
     })
     setTodoModal(true)
@@ -104,25 +92,18 @@ export default function Todo() {
     if (!todoForm.title.trim() || !todoForm.topic_id) return
     try {
       const payload = { ...todoForm, due_date: todoForm.due_date || null }
-      if (editingTodo) {
-        await updateTodo(editingTodo, payload)
-      } else {
-        await createTodo(payload)
-      }
+      if (editingTodo) { await updateTodo(editingTodo, payload) }
+      else { await createTodo(payload) }
       setTodoModal(false)
       await load()
-    } catch (e) {
-      console.error(e)
-    }
+    } catch (e) { console.error(e) }
   }
 
   async function toggleDone(item) {
     try {
       await updateTodo(item.id, { done: !item.done })
       await load()
-    } catch (e) {
-      console.error(e)
-    }
+    } catch (e) { console.error(e) }
   }
 
   async function removeTodo(id) {
@@ -130,26 +111,24 @@ export default function Todo() {
       await deleteTodo(id)
       setTodoModal(false)
       await load()
-    } catch (e) {
-      console.error(e)
-    }
+    } catch (e) { console.error(e) }
   }
 
-  if (loading) return <div className="page"><p className="muted">Cargando...</p></div>
+  if (loading) return <div className="page"><p className="muted">{t('common.loading')}</p></div>
 
   return (
     <>
       <div className="page-header">
-        <h2 className="page-title">To-Do</h2>
+        <h2 className="page-title">{t('todo.title')}</h2>
         <div className="page-header-actions">
-          <button className="btn" onClick={openTopicCreate}>+ Tema</button>
-          <button className="btn btn-primary" onClick={openTodoCreate}>+ Tarea</button>
+          <button className="btn" onClick={openTopicCreate}>{t('todo.newTopic')}</button>
+          <button className="btn btn-primary" onClick={openTodoCreate}>{t('todo.newTask')}</button>
         </div>
       </div>
 
       <div className="page">
         {topics.length === 0 ? (
-          <p className="muted">Crea un tema para empezar.</p>
+          <p className="muted">{t('todo.empty')}</p>
         ) : (
           <>
             <div className="topic-bar">
@@ -171,7 +150,7 @@ export default function Todo() {
             </div>
 
             {filteredItems.length === 0 ? (
-              <p className="muted">No hay tareas en este tema.</p>
+              <p className="muted">{t('todo.emptyTopic')}</p>
             ) : (
               <div className="todo-list">
                 {filteredItems.map(item => (
@@ -184,21 +163,16 @@ export default function Todo() {
                       <div className="todo-title">{item.title}</div>
                       {item.description && <div className="todo-desc">{item.description}</div>}
                       <div className="todo-meta">
-                        <span className={`priority-badge ${item.priority}`}>{PRIORITY_LABELS[item.priority]}</span>
+                        <span className={`priority-badge ${item.priority}`}>{priorityLabels[item.priority]}</span>
                         {item.due_date && <span className="todo-due">{item.due_date}</span>}
                       </div>
                     </div>
                     <div className="todo-actions">
-                      <button className="btn btn-icon" onClick={() => openTodoEdit(item)} title="Editar">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                          <path d="M10 1l3 3-8 8H2v-3z"/>
-                        </svg>
+                      <button className="btn btn-icon" onClick={() => openTodoEdit(item)} title={t('common.edit')}>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M10 1l3 3-8 8H2v-3z"/></svg>
                       </button>
-                      <button className="btn btn-icon" onClick={() => removeTodo(item.id)} title="Eliminar">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                          <polyline points="1 3 13 3 12 13 2 13 1 3"/>
-                          <line x1="5" y1="1" x2="9" y2="1"/>
-                        </svg>
+                      <button className="btn btn-icon" onClick={() => removeTodo(item.id)} title={t('common.delete')}>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><polyline points="1 3 13 3 12 13 2 13 1 3"/><line x1="5" y1="1" x2="9" y2="1"/></svg>
                       </button>
                     </div>
                   </div>
@@ -209,69 +183,54 @@ export default function Todo() {
         )}
       </div>
 
-      {/* Topic modal */}
-      <Modal open={topicModal} onClose={() => setTopicModal(false)} title={editingTopic ? 'Editar tema' : 'Nuevo tema'}>
+      <Modal open={topicModal} onClose={() => setTopicModal(false)} title={editingTopic ? t('todo.editTopic') : t('todo.createTopic')}>
         <div className="modal-form">
           <label className="field">
-            <span>Nombre</span>
-            <input value={topicForm.name} onChange={e => setTopicForm({ ...topicForm, name: e.target.value })} placeholder="Ej: Trabajo" autoFocus />
+            <span>{t('todo.topicName')}</span>
+            <input value={topicForm.name} onChange={e => setTopicForm({ ...topicForm, name: e.target.value })} placeholder={t('todo.topicNamePlaceholder')} autoFocus />
           </label>
           <div className="field">
-            <span>Color</span>
+            <span>{t('common.color')}</span>
             <div className="color-picker">
               {TOPIC_COLORS.map(c => (
-                <button
-                  key={c}
-                  className={`color-swatch${topicForm.color === c ? ' active' : ''}`}
-                  style={{ background: c }}
-                  onClick={() => setTopicForm({ ...topicForm, color: c })}
-                />
+                <button key={c} className={`color-swatch${topicForm.color === c ? ' active' : ''}`} style={{ background: c }} onClick={() => setTopicForm({ ...topicForm, color: c })} />
               ))}
             </div>
           </div>
           <div className="modal-actions">
-            <button className="btn btn-primary" onClick={saveTopic}>{editingTopic ? 'Guardar' : 'Crear'}</button>
-            {editingTopic && <button className="btn btn-danger" onClick={(e) => { setTopicModal(false); removeTopic(editingTopic, e) }}>Eliminar</button>}
-            <button className="btn" onClick={() => setTopicModal(false)}>Cancelar</button>
+            <button className="btn btn-primary" onClick={saveTopic}>{editingTopic ? t('common.save') : t('common.create')}</button>
+            {editingTopic && <button className="btn btn-danger" onClick={(e) => { setTopicModal(false); removeTopic(editingTopic, e) }}>{t('common.delete')}</button>}
+            <button className="btn" onClick={() => setTopicModal(false)}>{t('common.cancel')}</button>
           </div>
         </div>
       </Modal>
 
-      {/* Todo modal */}
-      <Modal open={todoModal} onClose={() => setTodoModal(false)} title={editingTodo ? 'Editar tarea' : 'Nueva tarea'}>
+      <Modal open={todoModal} onClose={() => setTodoModal(false)} title={editingTodo ? t('todo.editTask') : t('todo.createTask')}>
         <div className="modal-form">
           <label className="field">
-            <span>Título</span>
-            <input value={todoForm.title} onChange={e => setTodoForm({ ...todoForm, title: e.target.value })} placeholder="Título de la tarea" autoFocus />
+            <span>{t('common.title')}</span>
+            <input value={todoForm.title} onChange={e => setTodoForm({ ...todoForm, title: e.target.value })} placeholder={t('todo.taskTitlePlaceholder')} autoFocus />
           </label>
           <label className="field">
-            <span>Descripción</span>
-            <input value={todoForm.description} onChange={e => setTodoForm({ ...todoForm, description: e.target.value })} placeholder="Opcional" />
+            <span>{t('common.description')}</span>
+            <input value={todoForm.description} onChange={e => setTodoForm({ ...todoForm, description: e.target.value })} placeholder={t('todo.descriptionPlaceholder')} />
           </label>
           <label className="field">
-            <span>Tema</span>
-            <select className="field-select" value={todoForm.topic_id || ''} onChange={e => setTodoForm({ ...todoForm, topic_id: e.target.value })}>
-              {topics.map(t => (
-                <option key={t.id} value={t.id}>{t.name}</option>
-              ))}
-            </select>
-          </label>
-          <label className="field">
-            <span>Prioridad</span>
+            <span>{t('todo.priority')}</span>
             <select className="field-select" value={todoForm.priority} onChange={e => setTodoForm({ ...todoForm, priority: e.target.value })}>
-              <option value="low">Baja</option>
-              <option value="medium">Media</option>
-              <option value="high">Alta</option>
+              <option value="low">{priorityLabels.low}</option>
+              <option value="medium">{priorityLabels.medium}</option>
+              <option value="high">{priorityLabels.high}</option>
             </select>
           </label>
           <label className="field">
-            <span>Fecha límite</span>
+            <span>{t('todo.dueDate')}</span>
             <input type="date" value={todoForm.due_date} onChange={e => setTodoForm({ ...todoForm, due_date: e.target.value })} />
           </label>
           <div className="modal-actions">
-            <button className="btn btn-primary" onClick={saveTodo}>{editingTodo ? 'Guardar' : 'Crear'}</button>
-            {editingTodo && <button className="btn btn-danger" onClick={() => removeTodo(editingTodo)}>Eliminar</button>}
-            <button className="btn" onClick={() => setTodoModal(false)}>Cancelar</button>
+            <button className="btn btn-primary" onClick={saveTodo}>{editingTodo ? t('common.save') : t('common.create')}</button>
+            {editingTodo && <button className="btn btn-danger" onClick={() => removeTodo(editingTodo)}>{t('common.delete')}</button>}
+            <button className="btn" onClick={() => setTodoModal(false)}>{t('common.cancel')}</button>
           </div>
         </div>
       </Modal>

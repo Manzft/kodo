@@ -64,7 +64,14 @@ export const Tracking = () => (
 
 export const Settings = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="9" cy="9" r="2.5"/>
-    <path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.05 3.05l1.41 1.41M13.54 13.54l1.41 1.41M3.05 14.95l1.41-1.41M13.54 4.46l1.41-1.41"/>
+    <line x1="4" y1="1" x2="4" y2="7"/>
+    <line x1="4" y1="11" x2="4" y2="17"/>
+    <circle cx="4" cy="9" r="2"/>
+    <line x1="9" y1="1" x2="9" y2="4"/>
+    <line x1="9" y1="8" x2="9" y2="17"/>
+    <circle cx="9" cy="6" r="2"/>
+    <line x1="14" y1="1" x2="14" y2="10"/>
+    <line x1="14" y1="14" x2="14" y2="17"/>
+    <circle cx="14" cy="12" r="2"/>
   </svg>
 )
