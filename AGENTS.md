@@ -1,13 +1,13 @@
 # Kodo
 
-App personal de escritorio con Dashboard, Notas, Recordatorios, Calendario, Rutina, To-Do y Tracking.
+App personal de escritorio con Dashboard, Notas, Recordatorios, Calendario, Rutina, To-Do, Tracking y Chatbot.
 
 ## Stack
 
 | Capa | Tecnología |
 |---|---|
 | Frontend | React 18 + Vite, CSS vanilla |
-| Backend | Python 3 + Flask |
+| Backend | Python 3 + Flask + requests |
 | Datos | JSON en `~/.local/share/kodo/` |
 | Ejecución | Servidor local + navegador |
 
@@ -18,31 +18,32 @@ kodo/
 ├── frontend/
 │   └── src/
 │       ├── components/    # Sidebar, Modal, Settings, Icons
-│       ├── pages/         # Dashboard, Notes, Reminders, Calendar, Todo, Routine, Tracking
+│       ├── pages/         # Dashboard, Notes, Reminders, Calendar, Todo, Routine, Tracking, Chatbot
 │       ├── api.js         # Cliente HTTP para el backend
-│       ├── i18n.jsx      # Sistema de traducciones ES/EN con React Context
-│       ├── App.jsx        # Layout principal + routing por estado
-│       └── App.css        # Estilos globales + variables CSS (dark/light + 6 paletas)
+│       ├── i18n.jsx       # Sistema de traducciones ES/EN con React Context
+│       ├── App.jsx        # Layout principal + routing por estado + responsive hamburger
+│       └── App.css        # Estilos globales + variables CSS + responsive (≤768px / ≤480px)
 ├── backend/
-│   ├── routes/            # Blueprints: notes, reminders, calendar, todos, routines, trackers
+│   ├── routes/            # Blueprints: notes, reminders, calendar, todos, routines, trackers, chat
 │   ├── server.py          # Entry point Flask
 │   └── storage.py         # Lectura/escritura JSON en ~/.local/share/kodo/
-├── install.sh
-├── start.sh
+├── install.sh / install.ps1
+├── start.sh / start.ps1
 ├── README.md              # Bilingüe (ES/EN)
 └── LICENSE                # MIT
 ```
 
 ## Convenciones
 
-- **CSS**: variables en `:root` + `data-theme` y `data-palette` para tema oscuro/claro y 6 paletas
+- **CSS**: variables en `:root` + `data-theme` y `data-palette` para tema oscuro/claro y 6 paletas; media queries para responsive
 - **Iconos**: SVG inline en `Icons.jsx`, sin librerías de iconos
 - **Routing**: estado local con `useState` en `App.jsx`, sin react-router
 - **API**: `fetch` nativo en `api.js`, sin axios
 - **Backend**: Flask blueprints, un archivo por módulo en `routes/`
 - **IDs**: UUID v4 generados en backend con `uuid.uuid4()`
 - **i18n**: `useLang()` hook desde `i18n.jsx`, traducciones con claves anidadas
-- **Tema/paleta/idioma**: persistencia en `localStorage`
+- **Tema/paleta/idioma**: persistencia en `localStorage` (`kodo-theme`, `kodo-palette`, `kodo-lang`)
+- **Chatbot**: contexto de módulo seleccionable (carga datos del módulo activo como system prompt); proveedores OpenAI-compatibles con selector; API key y modelo persistidos en localStorage
 
 ## Comandos
 
@@ -62,13 +63,15 @@ kodo/
 | To-Do | todos.py + topics | Todo.jsx |
 | Rutina | routines.py + sessions | Routine.jsx |
 | Tracking | trackers.py | Tracking.jsx |
+| Chatbot | chat.py (proxy OpenAI-compatible) | Chatbot.jsx |
 
 ## Diseño
 
 - **Tema oscuro**: fondo `#0d0d14`, sidebar `#14141f`, superficies `#1c1c2e`
 - **Tema claro**: fondo `#f0f0f8`, sidebar/superficies blancas
 - **6 paletas**: Coral, Rosa, Azul, Verde, Púrpura, Naranja
-- **Sidebar**: 240px, logo Kodo (lápiz), navegación + ajustes al fondo
+- **Sidebar**: 240px (200px en ≤480px), logo Kodo (lápiz), navegación + ajustes al fondo
+- **Responsive**: hamburger menu en ≤768px, sidebar como drawer, FABs para crear, modales centrados
 - **Idiomas**: Español e Inglés, conmutables desde Ajustes
 - Esquinas redondeadas (8px), flat design
 
@@ -79,4 +82,6 @@ kodo/
 - Sistema de i18n ES/EN funcional
 - Tema oscuro/claro + 6 paletas de color
 - Tracking configurable (fecha inicio, días objetivo, grid calendario)
+- Chatbot con selector de proveedor (OpenAI, Gemini, DeepSeek, Mistral, Groq, OpenRouter, Together), listado de modelos, y contexto de módulo (carga datos del módulo seleccionado)
+- Diseño responsive (≤768px y ≤480px): hamburger, FAB, drawer sidebar
 - Backend verificado, build frontend sin errores
