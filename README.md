@@ -31,10 +31,24 @@ cd kodo
 ./install.sh
 ```
 
+#### Windows
+
+```powershell
+git clone https://github.com/manzft/kodo.git
+cd kodo
+.\install.ps1
+```
+
 ### Uso
 
 ```bash
 ./start.sh
+```
+
+#### Windows
+
+```powershell
+.\start.ps1
 ```
 
 Inicia el servidor Flask (`localhost:5000`) y el frontend Vite (`localhost:5173`), y abre el navegador.
@@ -84,10 +98,24 @@ cd kodo
 ./install.sh
 ```
 
+#### Windows
+
+```powershell
+git clone https://github.com/manzft/kodo.git
+cd kodo
+.\install.ps1
+```
+
 ### Usage
 
 ```bash
 ./start.sh
+```
+
+#### Windows
+
+```powershell
+.\start.ps1
 ```
 
 Starts the Flask server (`localhost:5000`) and Vite frontend (`localhost:5173`), then opens the browser.

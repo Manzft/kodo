@@ -1,7 +1,11 @@
 import json
+import sys
 from pathlib import Path
 
-DATA_DIR = Path.home() / ".local" / "share" / "kodo"
+if sys.platform == "win32":
+    DATA_DIR = Path.home() / "AppData" / "Roaming" / "kodo"
+else:
+    DATA_DIR = Path.home() / ".local" / "share" / "kodo"
 
 
 class Storage:
