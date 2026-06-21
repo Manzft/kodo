@@ -6,3 +6,6 @@ __pycache__/
 .DS_Store
 .vscode/
 .opencode/
+frontend/android/app/src/main/python/static/
+frontend/android/app/src/main/python/backend/
+

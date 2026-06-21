@@ -1,8 +1,12 @@
 import json
+import os
 import sys
 from pathlib import Path
 
-if sys.platform == "win32":
+_data_dir = os.environ.get("KODO_DATA_DIR")
+if _data_dir:
+    DATA_DIR = Path(_data_dir)
+elif sys.platform == "win32":
     DATA_DIR = Path.home() / "AppData" / "Roaming" / "kodo"
 else:
     DATA_DIR = Path.home() / ".local" / "share" / "kodo"

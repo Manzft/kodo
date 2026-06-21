@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Kodo</string>
+    <string name="title_activity_main">Kodo</string>
+    <string name="package_name">com.manzft.kodo</string>
+    <string name="custom_url_scheme">com.manzft.kodo</string>
+</resources>
